@@ -11,7 +11,7 @@ All code is client-side, so there is no difference between these two options.
 2. Click "Start processing". This will parse the JSON file and plot the track on the map.
 
 Each markers' colour is dependant on the device's battery level at that given point. Red = low battery, green = high battery.  Path colours between two markers are based of the first marker's colour.  
-Markers can be hovered over to display the date/time of that point, as well as the specific battery level.
+Markers can be clicked to display the date/time of that point, as well as the specific battery level.
 
 Now, you can freely alter the options.
 

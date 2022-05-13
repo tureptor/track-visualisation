@@ -33,12 +33,12 @@ async function startProcessing() {
     regMarkers[pointTime] = L.circleMarker(points[pointTime]["latlong"],
       {color: batteryToColour(points[pointTime]["battery"]),
       fill: true,fill_opacity: 1})
-      .bindTooltip(genTooltip(pointTime))
+      .bindPopup(genPopup(pointTime))
     accMarkers[pointTime] = L.circle(points[pointTime]["latlong"],
       {radius: points[pointTime]["horiAcc"],
       color: batteryToColour(points[pointTime]["battery"]),
       fill: true,fill_opacity: 0.6})
-      .bindTooltip(genTooltip(pointTime))
+      .bindPopup(genPopup(pointTime))
   }
   
   setMap()
@@ -66,7 +66,7 @@ function finalFilter(maxDist) {
   for (const point in points) {
     if ((point in groupedPoints) && groupedPoints[point][0] <= maxDist) {
       if (prevPoint == 0) {
-        L.marker(points[point]["latlong"]).bindTooltip(genTooltip(point)).addTo(markerLayer)
+        L.marker(points[point]["latlong"]).bindPopup(genPopup(point)).addTo(markerLayer)
       } else {
         markers[point].addTo(markerLayer)
         let path = [points[prevPoint]["latlong"], points[point]["latlong"]]
@@ -77,7 +77,7 @@ function finalFilter(maxDist) {
     } else {plotThisPoint[point] = false}
   }
   //markerLayer.removeLayer(markers[prevPoint])
-  L.marker(points[prevPoint]["latlong"]).bindTooltip(genTooltip(prevPoint)).addTo(markerLayer)
+  L.marker(points[prevPoint]["latlong"]).bindPopup(genPopup(prevPoint)).addTo(markerLayer)
   lineLayer.addTo(mainLayer)
   markerLayer.addTo(mainLayer)
   markerLayer.bringToFront()
@@ -147,9 +147,11 @@ function batteryToColour(percent) {
   return "#"+nToH(cols[0])+nToH(cols[1])+"00"
 }
 
-function genTooltip(point) {
+function genPopup(point) {
   let date = new Date(1000 * points[point]["time"]).toGMTString()
-  return  "Date: " + date + "<br>" + "Battery: " +points[point]["battery"] +"%"
+  return  "Date: " + date + "<br>"
+  + "Battery: " +points[point]["battery"] +"%" + "<br>"
+  + "LatLong: " + points[point]["latlong"].map(x => x.toFixed(5)).toString()
 }
 
 function addLayers() {
@@ -161,7 +163,7 @@ function addLayers() {
         }),
         "Topography":L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
   maxZoom: 17,
-  attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+  attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,<a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
 })
       }
   overLayers = {
