@@ -19,7 +19,7 @@ function genBaseMap() {
   }
   ).setView([0, 0], 2);
   addLayers()
-
+  L.control.scale().addTo(map)
 }
 
 async function startProcessing() {
